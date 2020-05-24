@@ -1,20 +1,42 @@
-from typing import List
+def dec1(func):
+    print("HHHA:0====>")
+
+    def one():
+        print("HHHA:0.1====>")
+        func()
+        print("HHHA:0.2====>")
+
+    return one
 
 
-class Solution:
-    def lengthOfLIS(self, nums: List[int]) -> int:
-        if not len(nums): return 0
-        f = [1] * (len(nums) + 1)
-        for i in range(2, len(nums)+1):
-            max_num = float('-inf')
-            nums_i = i-1
-            for k in range(0, nums_i+1):
-                if nums[nums_i] > nums[k]:
-                    max_num = max(max_num, 1+f[k+1])
-            if max_num != float('-inf'): f[i] = max_num 
-        return f
+def dec2(func):
+    print("HHHB:0====>")
 
-sol = Solution()
-nums = [10,9,2,5,3,7,101,18]
-res = sol.lengthOfLIS(nums=nums)
-print(res)
+    def two():
+        print("HHHB:0.1====>")
+        func()
+        print("HHHB:0.2====>")
+
+    return two
+
+
+def dec3(func):
+    print("HHHC:0====>")
+
+    def three():
+        print("HHHC:0.1====>")
+        func()
+        print("HHHC:0.2====>")
+
+    return three
+
+
+@dec1
+@dec2
+@dec3
+def test():
+    print("HHHD:0====>test")
+
+
+print("HHHH:0====>")
+# test()
