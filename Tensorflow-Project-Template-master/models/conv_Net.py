@@ -8,29 +8,25 @@
  @time: 2020-05-25
 """
 
-import sys, os
-base_dir = os.path.dirname(os.path.dirname(os.path.abspath('file')))
-sys.path.append(base_dir)
-print('sys path: {}'.format(sys.path))
-
-from base.base_model import BaseModel
 from tensorflow.keras import Model, layers
 import tensorflow as tf
 
 
-class TemplateModel(Model, BaseModel):
+class ConvNet(Model):
     def __init__(self, config):
         super().__init__()
-        super().__init__(config)
-        num_classes = config['num_classes']
+        num_classes = config.num_classes
+        conv1_filters = config.conv1_filters
+        conv2_filters = config.conv2_filters
+        fc1_units = config.fc1_units
 
         # Convolution Layer with 32 filters and a kernel size of 5.
-        self.conv1 = layers.Conv2D(32, kernel_size=5, activation=tf.nn.relu)
+        self.conv1 = layers.Conv2D(conv1_filters, kernel_size=5, activation=tf.nn.relu)
         # Max Pooling (down-sampling) with kernel size of 2 and strides of 2.
         self.maxpool1 = layers.MaxPool2D(2, strides=2)
 
         # Convolution Layer with 64 filters and a kernel size of 3.
-        self.conv2 = layers.Conv2D(64, kernel_size=3, activation=tf.nn.relu)
+        self.conv2 = layers.Conv2D(conv2_filters, kernel_size=3, activation=tf.nn.relu)
         # Max Pooling (down-sampling) with kernel size of 2 and strides of 2.
         self.maxpool2 = layers.MaxPool2D(2, strides=2)
 
@@ -38,15 +34,12 @@ class TemplateModel(Model, BaseModel):
         self.flatten = layers.Flatten()
 
         # Fully connected layer.
-        self.fc1 = layers.Dense(1024)
+        self.fc1 = layers.Dense(fc1_units)
         # Apply Dropout (if is_training is False, dropout is not applied).
         self.dropout = layers.Dropout(rate=0.5)
 
         # Output layer, class prediction.
         self.out = layers.Dense(num_classes)
-
-        self.build_model()
-        self.init_saver()
 
     # Set forward pass.
     def call(self, x, is_training=False):
@@ -65,12 +58,5 @@ class TemplateModel(Model, BaseModel):
             x = tf.nn.softmax(x)
         return x
 
-    def build_model(self):
-        # here you build the tensorflow graph of any model you want and also define the loss.
-        pass
-
-    def init_saver(self):
-        # here you initialize the tensorflow saver that will be used in saving the checkpoints.
-        # self.saver = tf.train.Saver(max_to_keep=self.config.max_to_keep)
-
-        pass
+if __name__ == '__main__':
+    model = ConvNet()
